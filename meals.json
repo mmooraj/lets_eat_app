@@ -1,0 +1,26 @@
+{
+  "cook": [
+    { "name": "Steak", "protein": "Beef" },
+    { "name": "Thai Pad Kra Pow", "protein": "Chicken" },
+    { "name": "Paninis", "protein": "Anything" },
+    { "name": "Burgers", "protein": "Beef" },
+    { "name": "Bihari Chicken", "protein": "Chicken" },
+    { "name": "Tikka Chicken", "protein": "Chicken" },
+    { "name": "Chicken with Chimichurri", "protein": "Chicken" },
+    { "name": "Pasta with Prawn", "protein": "Seafood" },
+    { "name": "Pasta with Chicken", "protein": "Chicken" }
+  ],
+  "order": [
+    { "name": "Franco Manca", "protein": "Vegetarian" },
+    { "name": "Iranian", "protein": "Anything" },
+    { "name": "KFC", "protein": "Chicken" },
+    { "name": "Biryani Guys", "protein": "Anything" },
+    { "name": "Nando’s", "protein": "Chicken" },
+    { "name": "Thai", "protein": "Anything" },
+    { "name": "Wingstop", "protein": "Chicken" },
+    { "name": "Papa Johns", "protein": "Vegetarian" },
+    { "name": "Crisp", "protein": "Vegetarian" },
+    { "name": "Grilandia", "protein": "Anything" },
+    { "name": "Pepes", "protein": "Anything" }
+  ]
+}
