@@ -12,26 +12,22 @@ st.set_page_config(
 )
 
 # -----------------------------
-# Header
+# Header (centered & smaller)
 # -----------------------------
-st.image("drawings/header.png", width=250)
+st.image("drawings/header.png", width=260)
 st.write("")
 
 # -----------------------------
-# Load meals from file
+# Load meals
 # -----------------------------
 MEALS_FILE = "meals.json"
 
-if not os.path.exists(MEALS_FILE):
-    meals = {"cook": [], "order": []}
-    with open(MEALS_FILE, "w") as f:
-        json.dump(meals, f, indent=2)
-else:
-    with open(MEALS_FILE, "r") as f:
-        meals = json.load(f)
+with open(MEALS_FILE, "r") as f:
+    meals = json.load(f)
 
-cook_meals = meals.get("cook", [])
-order_meals = meals.get("order", [])
+cook_meals = meals["cook"]
+order_meals = meals["order"]
+late_night_meals = meals["late_night"]
 
 # -----------------------------
 # Protein selector
@@ -46,26 +42,28 @@ st.write("")
 # -----------------------------
 # Buttons with icons (same row)
 # -----------------------------
-col1, col2, col3 = st.columns(3)
+col1, col2, col3, col4 = st.columns(4)
 
 with col1:
-    st.image("drawings/dice.png", width=110)
+    st.image("drawings/dice.png", width=90)
     anything = st.button("Anything")
 
 with col2:
-    st.image("drawings/pan.png", width=110)
+    st.image("drawings/pan.png", width=90)
     cook = st.button("Let's Cook")
 
 with col3:
-    st.image("drawings/scooter.png", width=110)
+    st.image("drawings/scooter.png", width=90)
     order = st.button("Let's Order")
 
+with col4:
+    st.image("drawings/late.png", width=90)
+    late = st.button("Late Night")
+
 # -----------------------------
-# Meal selection logic
+# Meal picker
 # -----------------------------
 def pick_meal(meal_list, protein):
-    if not meal_list:
-        return None
     if protein == "Anything":
         return random.choice(meal_list)
     filtered = [m for m in meal_list if m["protein"] == protein]
@@ -74,43 +72,48 @@ def pick_meal(meal_list, protein):
     return None
 
 # -----------------------------
-# Show result ABOVE add-meal
+# Show result
 # -----------------------------
 st.write("")
 
 if anything:
-    all_meals = cook_meals + order_meals
+    all_meals = cook_meals + order_meals + late_night_meals
     meal = pick_meal(all_meals, protein_choice)
     if meal:
         st.success(f"✨ You should eat: **{meal['name']}**")
-    else:
-        st.warning("No meals match that protein yet!")
 
 if cook:
     meal = pick_meal(cook_meals, protein_choice)
     if meal:
         st.success(f"🍳 Let's cook: **{meal['name']}**")
-    else:
-        st.warning("No cooking meals match that protein yet!")
 
 if order:
     meal = pick_meal(order_meals, protein_choice)
     if meal:
         st.success(f"🛵 Let's order: **{meal['name']}**")
-    else:
-        st.warning("No ordering meals match that protein yet!")
+
+if late:
+    meal = pick_meal(late_night_meals, protein_choice)
+    if meal:
+        st.success(f"🌙 Late night vibes: **{meal['name']}**")
 
 # -----------------------------
-# Add meal (dropdown)
+# Add meal (dropdown style)
 # -----------------------------
 with st.expander("➕ Add a meal"):
     with st.form("add_meal_form"):
         new_meal = st.text_input("Meal name")
-        meal_type = st.selectbox("Type", ["Cook", "Order"])
+
+        meal_type = st.selectbox(
+            "Type",
+            ["Cook", "Order", "Late Night"]
+        )
+
         meal_protein = st.selectbox(
             "Protein",
             ["Anything", "Chicken", "Beef", "Seafood", "Vegetarian"]
         )
+
         submitted = st.form_submit_button("Add")
 
         if submitted and new_meal:
@@ -118,8 +121,10 @@ with st.expander("➕ Add a meal"):
 
             if meal_type == "Cook":
                 cook_meals.append(entry)
-            else:
+            elif meal_type == "Order":
                 order_meals.append(entry)
+            else:
+                late_night_meals.append(entry)
 
             with open(MEALS_FILE, "w") as f:
                 json.dump(meals, f, indent=2)
