@@ -10,6 +10,45 @@ st.set_page_config(
     page_title="Let's Eat!",
     layout="centered"
 )
+# -----------------------------
+# Mobile-friendly styling + cute font
+# -----------------------------
+st.markdown(
+    """
+    <style>
+    /* Import cute font */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+    html, body, [class*="css"]  {
+        font-family: 'Poppins', sans-serif;
+    }
+
+    /* Center app & constrain width (iPhone size) */
+    .block-container {
+        max-width: 390px;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        margin: auto;
+    }
+
+    /* Center buttons */
+    div.stButton > button {
+        width: 100%;
+        border-radius: 14px;
+        font-size: 16px;
+    }
+
+    /* Center images */
+    img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 # -----------------------------
 # Header (centered & smaller)
