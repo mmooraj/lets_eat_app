@@ -21,6 +21,13 @@
     { "name": "Papa Johns", "protein": "Vegetarian" },
     { "name": "Crisp", "protein": "Vegetarian" },
     { "name": "Grilandia", "protein": "Anything" },
-    { "name": "Pepes", "protein": "Anything" }
+    { "name": "Pepes", "protein": "Chicken" },
+    { "name": "Subway", "protein": "Chicken" },
+    { "name": "McDonald's", "protein": "Anything"} 
+  ],
+  "late_night": [
+    { "name": "McDonald’s", "protein": "Anything" },
+    { "name": "Pepe’s", "protein": "Chicken" },
+    { "name": "Subway", "protein": "Chicken" }
   ]
 }
