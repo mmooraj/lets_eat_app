@@ -80,7 +80,7 @@ with col3:
 
 with col4:
     st.markdown("<div style='text-align:center'>", unsafe_allow_html=True)
-    safe_image("drawings/late_night.png")
+    safe_image("drawings/late.png")
     if st.button("Late Night"):
         choice = "late_night"
     st.markdown("</div>", unsafe_allow_html=True)
