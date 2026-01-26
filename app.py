@@ -1,104 +1,138 @@
 import streamlit as st
-import json
 import random
+import json
 import os
 
-# -----------------------
-# Page config
-# -----------------------
+# -----------------------------
+# Page setup
+# -----------------------------
 st.set_page_config(
-    page_title="Let's Eat",
+    page_title="Let's Eat!",
     layout="centered"
 )
 
-# -----------------------
-# Helpers
-# -----------------------
-def safe_image(path, width=80):
-    if os.path.exists(path):
-        st.image(path, width=width)
+# -----------------------------
+# Header (centered & smaller)
+# -----------------------------
+st.image("drawings/header.png", width=260)
+st.write("")
 
-def load_meals():
-    with open("meals.json", "r") as f:
-        return json.load(f)
+# -----------------------------
+# Load meals
+# -----------------------------
+MEALS_FILE = "meals.json"
 
-def save_meals(data):
-    with open("meals.json", "w") as f:
-        json.dump(data, f, indent=2)
+with open(MEALS_FILE, "r") as f:
+    meals = json.load(f)
 
-# -----------------------
-# Load data
-# -----------------------
-meals = load_meals()
+cook_meals = meals["cook"]
+order_meals = meals["order"]
+late_night_meals = meals["late_night"]
 
-# -----------------------
-# Title
-# -----------------------
-st.title("Let’s Eat 🍽️")
-
-# -----------------------
+# -----------------------------
 # Protein selector
-# -----------------------
-protein = st.selectbox(
+# -----------------------------
+protein_choice = st.selectbox(
     "Choose a protein (optional)",
     ["Anything", "Chicken", "Beef", "Seafood", "Vegetarian"]
 )
 
-st.markdown("---")
+st.write("")
 
-# -----------------------
-# Choice buttons (OLD VERSION)
-# -----------------------
-choice = None
+# -----------------------------
+# Buttons with icons (same row)
+# -----------------------------
+col1, col2, col3, col4 = st.columns(4)
 
-safe_image("icons/dice.png")
-if st.button("Anything"):
-    choice = "anything"
+with col1:
+    st.image("drawings/dice.png", width=90)
+    anything = st.button("Anything")
 
-safe_image("icons/pan.png")
-if st.button("Let's Cook"):
-    choice = "cook"
+with col2:
+    st.image("drawings/pan.png", width=90)
+    cook = st.button("Let's Cook")
 
-safe_image("icons/scooter.png")
-if st.button("Let's Order"):
-    choice = "order"
+with col3:
+    st.image("drawings/scooter.png", width=90)
+    order = st.button("Let's Order")
 
-safe_image("icons/late_night.png")
-if st.button("Late Night"):
-    choice = "late_night"
+with col4:
+    st.image("drawings/late.png", width=90)
+    late = st.button("Late Night")
 
-# -----------------------
-# Pick a meal
-# -----------------------
-if choice:
-    options = meals.get(choice, [])
+# -----------------------------
+# Meal picker
+# -----------------------------
+def pick_meal(meal_list, protein):
+    if protein == "Anything":
+        return random.choice(meal_list)
+    filtered = [m for m in meal_list if m["protein"] == protein]
+    if filtered:
+        return random.choice(filtered)
+    return None
 
-    if protein != "Anything":
-        options = [
-            m for m in options
-            if protein.lower() in m.lower()
-        ]
+# -----------------------------
+# Show result
+# -----------------------------
+st.write("")
 
-    if options:
-        st.success(f"✨ You should eat: **{random.choice(options)}**")
-    else:
-        st.warning("No meals match that yet — add one below 👇")
+if anything:
+    all_meals = cook_meals + order_meals + late_night_meals
+    meal = pick_meal(all_meals, protein_choice)
+    if meal:
+        st.success(f"✨ You should eat: **{meal['name']}**")
 
-# -----------------------
-# Add a meal
-# -----------------------
+if cook:
+    meal = pick_meal(cook_meals, protein_choice)
+    if meal:
+        st.success(f"🍳 Let's cook: **{meal['name']}**")
+
+if order:
+    meal = pick_meal(order_meals, protein_choice)
+    if meal:
+        st.success(f"🛵 Let's order: **{meal['name']}**")
+
+if late:
+    meal = pick_meal(late_night_meals, protein_choice)
+    if meal:
+        st.success(f"🌙 Late night vibes: **{meal['name']}**")
+
+# -----------------------------
+# Add meal (dropdown style)
+# -----------------------------
 with st.expander("➕ Add a meal"):
-    meal_name = st.text_input("Meal name")
+    with st.form("add_meal_form"):
+        new_meal = st.text_input("Meal name")
 
-    category = st.selectbox(
-        "Category",
-        ["anything", "cook", "order", "late_night"]
-    )
+        meal_type = st.selectbox(
+            "Type",
+            ["Cook", "Order", "Late Night"]
+        )
 
-    if st.button("Add meal"):
-        if meal_name:
-            meals[category].append(meal_name)
-            save_meals(meals)
-            st.success("Added! 🍽️")
-        else:
-            st.error("Please enter a meal name")
+        meal_protein = st.selectbox(
+            "Protein",
+            ["Anything", "Chicken", "Beef", "Seafood", "Vegetarian"]
+        )
+
+        submitted = st.form_submit_button("Add")
+
+        if submitted and new_meal:
+            entry = {"name": new_meal, "protein": meal_protein}
+
+            if meal_type == "Cook":
+                cook_meals.append(entry)
+            elif meal_type == "Order":
+                order_meals.append(entry)
+            else:
+                late_night_meals.append(entry)
+
+            with open(MEALS_FILE, "w") as f:
+                json.dump(meals, f, indent=2)
+
+            st.success("Meal added! 🎉")
+
+# -----------------------------
+# Footer
+# -----------------------------
+st.write("")
+st.image("drawings/footer.png", width=200)
