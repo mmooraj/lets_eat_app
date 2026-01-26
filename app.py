@@ -4,7 +4,7 @@ import random
 import os
 
 # -----------------------
-# Page config (mobile first)
+# Page config
 # -----------------------
 st.set_page_config(
     page_title="Let's Eat",
@@ -14,7 +14,7 @@ st.set_page_config(
 # -----------------------
 # Helpers
 # -----------------------
-def safe_image(path, width=90):
+def safe_image(path, width=80):
     if os.path.exists(path):
         st.image(path, width=width)
 
@@ -34,12 +34,7 @@ meals = load_meals()
 # -----------------------
 # Title
 # -----------------------
-st.markdown(
-    "<h2 style='text-align:center;'>Let’s Eat ✨</h2>",
-    unsafe_allow_html=True
-)
-
-st.markdown("<br>", unsafe_allow_html=True)
+st.title("Let’s Eat 🍽️")
 
 # -----------------------
 # Protein selector
@@ -49,41 +44,28 @@ protein = st.selectbox(
     ["Anything", "Chicken", "Beef", "Seafood", "Vegetarian"]
 )
 
-# -----------------------
-# Centered 2x2 grid
-# -----------------------
-col1, col2 = st.columns(2)
-col3, col4 = st.columns(2)
+st.markdown("---")
 
+# -----------------------
+# Choice buttons (OLD VERSION)
+# -----------------------
 choice = None
 
-with col1:
-    st.markdown("<div style='text-align:center'>", unsafe_allow_html=True)
-    safe_image("drawings/dice.png")
-    if st.button("Anything"):
-        choice = "anything"
-    st.markdown("</div>", unsafe_allow_html=True)
+safe_image("icons/dice.png")
+if st.button("Anything"):
+    choice = "anything"
 
-with col2:
-    st.markdown("<div style='text-align:center'>", unsafe_allow_html=True)
-    safe_image("drawings/pan.png")
-    if st.button("Let's Cook"):
-        choice = "cook"
-    st.markdown("</div>", unsafe_allow_html=True)
+safe_image("icons/pan.png")
+if st.button("Let's Cook"):
+    choice = "cook"
 
-with col3:
-    st.markdown("<div style='text-align:center'>", unsafe_allow_html=True)
-    safe_image("drawings/scooter.png")
-    if st.button("Let's Order"):
-        choice = "order"
-    st.markdown("</div>", unsafe_allow_html=True)
+safe_image("icons/scooter.png")
+if st.button("Let's Order"):
+    choice = "order"
 
-with col4:
-    st.markdown("<div style='text-align:center'>", unsafe_allow_html=True)
-    safe_image("drawings/late.png")
-    if st.button("Late Night"):
-        choice = "late_night"
-    st.markdown("</div>", unsafe_allow_html=True)
+safe_image("icons/late_night.png")
+if st.button("Late Night"):
+    choice = "late_night"
 
 # -----------------------
 # Pick a meal
