@@ -91,4 +91,32 @@ with col4:
 if choice:
     options = meals.get(choice, [])
 
-    if pro
+    if protein != "Anything":
+        options = [
+            m for m in options
+            if protein.lower() in m.lower()
+        ]
+
+    if options:
+        st.success(f"✨ You should eat: **{random.choice(options)}**")
+    else:
+        st.warning("No meals match that yet — add one below 👇")
+
+# -----------------------
+# Add a meal
+# -----------------------
+with st.expander("➕ Add a meal"):
+    meal_name = st.text_input("Meal name")
+
+    category = st.selectbox(
+        "Category",
+        ["anything", "cook", "order", "late_night"]
+    )
+
+    if st.button("Add meal"):
+        if meal_name:
+            meals[category].append(meal_name)
+            save_meals(meals)
+            st.success("Added! 🍽️")
+        else:
+            st.error("Please enter a meal name")
