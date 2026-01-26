@@ -1,153 +1,94 @@
 import streamlit as st
 import json
 import random
-from datetime import datetime
+import os
 
-# -----------------------------
-# PAGE CONFIG (mobile-first)
-# -----------------------------
+# -----------------------
+# Page config (mobile first)
+# -----------------------
 st.set_page_config(
-    page_title="Let's Eat!",
-    layout="centered",
-    initial_sidebar_state="collapsed"
+    page_title="Let's Eat",
+    layout="centered"
 )
 
-# -----------------------------
-# MOBILE CENTERING CSS
-# -----------------------------
-st.markdown("""
-<style>
-/* Center the whole app like an iPhone screen */
-.block-container {
-    max-width: 390px;
-    padding-top: 1.5rem;
-    margin: auto;
-}
+# -----------------------
+# Helpers
+# -----------------------
+def safe_image(path, width=90):
+    if os.path.exists(path):
+        st.image(path, width=width)
 
-/* Center buttons */
-.stButton>button {
-    width: 100%;
-    border-radius: 18px;
-    font-size: 16px;
-    padding: 0.75rem;
-}
+def load_meals():
+    with open("meals.json", "r") as f:
+        return json.load(f)
 
-/* Center images */
-.icon {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 0.25rem;
-}
+def save_meals(data):
+    with open("meals.json", "w") as f:
+        json.dump(data, f, indent=2)
 
-/* Slight spacing between grid items */
-.grid-item {
-    margin-bottom: 1.25rem;
-}
-</style>
-""", unsafe_allow_html=True)
+# -----------------------
+# Load data
+# -----------------------
+meals = load_meals()
 
-# -----------------------------
-# LOAD MEALS JSON
-# -----------------------------
-with open("meals.json", "r") as f:
-    meals = json.load(f)
+# -----------------------
+# Title
+# -----------------------
+st.markdown(
+    "<h2 style='text-align:center;'>Let’s Eat ✨</h2>",
+    unsafe_allow_html=True
+)
 
-# -----------------------------
-# TITLE
-# -----------------------------
-st.image("icons/logo.png", use_container_width=True)
+st.markdown("<br>", unsafe_allow_html=True)
 
-st.write("")
-
-# -----------------------------
-# PROTEIN FILTER
-# -----------------------------
+# -----------------------
+# Protein selector
+# -----------------------
 protein = st.selectbox(
     "Choose a protein (optional)",
     ["Anything", "Chicken", "Beef", "Seafood", "Vegetarian"]
 )
 
-# -----------------------------
-# HELPER FUNCTION
-# -----------------------------
-def get_random_meal(category):
-    options = meals.get(category, [])
-    if protein != "Anything":
-        options = [
-            m for m in options
-            if protein.lower() in m.lower() or "vegetarian" in m.lower()
-        ]
-    return random.choice(options) if options else "No meals found"
-
-# -----------------------------
-# ICON GRID (2x2)
-# -----------------------------
+# -----------------------
+# Centered 2x2 grid
+# -----------------------
 col1, col2 = st.columns(2)
+col3, col4 = st.columns(2)
 
-# -------- TOP LEFT: ANYTHING --------
+choice = None
+
 with col1:
-    st.markdown('<div class="grid-item">', unsafe_allow_html=True)
-    st.markdown('<div class="icon">', unsafe_allow_html=True)
-    st.image("icons/dice.png", width=90)
-    st.markdown('</div>', unsafe_allow_html=True)
-
+    st.markdown("<div style='text-align:center'>", unsafe_allow_html=True)
+    safe_image("drawings/dice.png")
     if st.button("Anything"):
-        st.success(get_random_meal("cook"))
-    st.markdown('</div>', unsafe_allow_html=True)
+        choice = "anything"
+    st.markdown("</div>", unsafe_allow_html=True)
 
-# -------- TOP RIGHT: COOK --------
 with col2:
-    st.markdown('<div class="grid-item">', unsafe_allow_html=True)
-    st.markdown('<div class="icon">', unsafe_allow_html=True)
-    st.image("icons/pan.png", width=90)
-    st.markdown('</div>', unsafe_allow_html=True)
-
+    st.markdown("<div style='text-align:center'>", unsafe_allow_html=True)
+    safe_image("drawings/pan.png")
     if st.button("Let's Cook"):
-        st.success(get_random_meal("cook"))
-    st.markdown('</div>', unsafe_allow_html=True)
+        choice = "cook"
+    st.markdown("</div>", unsafe_allow_html=True)
 
-# -------- BOTTOM LEFT: ORDER --------
-with col1:
-    st.markdown('<div class="grid-item">', unsafe_allow_html=True)
-    st.markdown('<div class="icon">', unsafe_allow_html=True)
-    st.image("icons/scooter.png", width=90)
-    st.markdown('</div>', unsafe_allow_html=True)
-
+with col3:
+    st.markdown("<div style='text-align:center'>", unsafe_allow_html=True)
+    safe_image("drawings/scooter.png")
     if st.button("Let's Order"):
-        st.success(get_random_meal("order"))
-    st.markdown('</div>', unsafe_allow_html=True)
+        choice = "order"
+    st.markdown("</div>", unsafe_allow_html=True)
 
-# -------- BOTTOM RIGHT: LATE NIGHT --------
-with col2:
-    st.markdown('<div class="grid-item">', unsafe_allow_html=True)
-    st.markdown('<div class="icon">', unsafe_allow_html=True)
-    st.image("icons/late_night.png", width=90)
-    st.markdown('</div>', unsafe_allow_html=True)
-
+with col4:
+    st.markdown("<div style='text-align:center'>", unsafe_allow_html=True)
+    safe_image("drawings/late_night.png")
     if st.button("Late Night"):
-        st.success(get_random_meal("late_night"))
-    st.markdown('</div>', unsafe_allow_html=True)
+        choice = "late_night"
+    st.markdown("</div>", unsafe_allow_html=True)
 
-# -----------------------------
-# ADD A MEAL (PERSISTENT)
-# -----------------------------
-st.divider()
-st.subheader("➕ Add a meal")
+# -----------------------
+# Pick a meal
+# -----------------------
+if choice:
+    options = meals.get(choice, [])
 
-new_meal = st.text_input("Meal name")
-
-meal_type = st.selectbox(
-    "Category",
-    ["cook", "order", "late_night"]
-)
-
-if st.button("Add meal"):
-    if new_meal:
-        meals.setdefault(meal_type, []).append(new_meal)
-
-        with open("meals.json", "w") as f:
-            json.dump(meals, f, indent=2)
-
-        st.success(f"Added '{new_meal}' to {meal_type}")
-    else:
-        st.warning("Please enter a meal name")
+    if pro
