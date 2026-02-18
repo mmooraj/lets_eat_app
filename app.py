@@ -109,7 +109,7 @@ if late:
 if us_two:
     meal = pick_meal(us_two_meals, protein_choice)
     if meal:
-        st.success(f"🫶 You two should get: **{meal['name']}**")
+        st.success(f"🫶 We should get: **{meal['name']}**")
 
 # -----------------------------
 # Add meal section
