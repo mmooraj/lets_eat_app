@@ -29,5 +29,21 @@
     { "name": "McDonald’s", "protein": "Anything" },
     { "name": "Pepe’s", "protein": "Chicken" },
     { "name": "Subway", "protein": "Chicken" }
-  ]
+  ], 
+  "us_two": [
+    { "name": "McDonald’s", "protein": "Anything" },
+    { "name": "Tacoes", "protein": "Anything" },
+    { "name": "Pizza", "protein": "Vegetarian" }, 
+    { "name": "Padella", "protein": "Anything" },
+    { "name": "Nando's", "protein": "Chicken" },
+    { "name": "Lebanese", "protein": "Anything" }, 
+    { "name": "Wagamama's", "protein": "Anything" },
+    { "name": "Desi Food", "protein": "Chicken" },
+    { "name": "Pasta with Prawn", "protein": "Seafood" },
+    { "name": "McDonald’s", "protein": "Anything" },
+    { "name": "Franco Manca", "protein": "Vegetarian" }
+  ], 
+  ], 
+  ], 
+  ], 
 }
