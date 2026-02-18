@@ -32,7 +32,7 @@
   ], 
   "us_two": [
     { "name": "McDonald’s", "protein": "Anything" },
-    { "name": "Tacoes", "protein": "Anything" },
+    { "name": "Tacos", "protein": "Anything" },
     { "name": "Pizza", "protein": "Vegetarian" }, 
     { "name": "Padella", "protein": "Anything" },
     { "name": "Nando's", "protein": "Chicken" },
